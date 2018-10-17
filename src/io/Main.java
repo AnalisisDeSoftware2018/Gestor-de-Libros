@@ -1,3 +1,5 @@
+package io;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -5,13 +7,11 @@ import java.util.Collections;
 import java.util.Scanner;
 import java.util.Vector;
 
-import io.Libro;
-import io.imprimir;
-import io.imprimirEnArchivo;
-
 public class Main {
+	
+	private static Scanner entradaEscaner = new Scanner(System.in);
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException{
 		PrintStream out = null;
 		Scanner teclado;
 		if(!System.getProperties().get("os.name").equals("Linux") // (1)	//(1)
@@ -24,7 +24,7 @@ public class Main {
 	int[] contador = {0};
 	int opcion, subopcion;
 	String[] campos;
-	String ruta;
+	String ruta = "Datos.txt";
 	Scanner entrada = new Scanner((Readable) new FileReader(ruta));
 	while (entrada.hasNextLine()) {// (5)
 		campos = entrada.nextLine().split("\t"); // (6)
@@ -40,22 +40,22 @@ public class Main {
 	entrada.close();// (7)
 	libro = new Libro();
 	do {// (8)
-		out.println("MEN\u00DA");// (9)
-		out.println("1.- Altas");
-		out.println("2.- Consultas");
-		out.println("3.- Actualizaciones");
-		out.println("4.- Bajas");
-		out.println("5.- Ordenar registros");
-		out.println("6.- Listar registros");
-		out.println("7.- Salir");
+		System.out.println("MENU");// (9)
+		System.out.println("1.- Altas");
+		System.out.println("2.- Consultas");
+		System.out.println("3.- Actualizaciones");
+		System.out.println("4.- Bajas");
+		System.out.println("5.- Ordenar registros");
+		System.out.println("6.- Listar registros");
+		System.out.println("7.- Salir");
 		do {// (10)
-			opcion = leer_entero ("Seleccione una opci\u00F3n");// (11)
+			opcion = leer_entero ("Seleccione una opcion");// (11)
 			if(opcion<1 // (12)
 					|| opcion>7) // (13)
-						out.println("Opci\u00F3nn no v\u00E1lida."); // (14)
+						out.println("Opcion no valida."); // (14)
 	} while (opcion<1 // (15)
 			|| opcion>7); // (16)
-	out.println(); // (17)
+		System.out.println(); // (17)
 	if (vector.isEmpty() // (18)
 			&& opcion!=1 //(19)
 				&& opcion!=7) { // (20)
@@ -73,11 +73,11 @@ public class Main {
 	}
 	if (opcion==1 // (26)
 			&& dato!=null) // (27)
-				out.println("El registro ya existe."); // (28)
+				System.out.println("El registro ya existe."); // (28)
 	else if (opcion>=2 // (29)
 				&& opcion<=4 // (30)
 					&& dato==null) // (31)
-						out.println("\nRegistro no encontrado."); // (32)
+				System.out.println("\nRegistro no encontrado."); // (32)
 		else switch (opcion) { // (33)
 	case 1: // (34)
 		libro.setTitulo(leer_cadena ("Ingrese el titulo"));
@@ -87,15 +87,15 @@ public class Main {
 		libro.setAnno_de_publicacion(leer_entero ("Ingrese el anio de publicacion"));
 		vector.add(libro);
 		libro = new Libro();
-		out.println("\nRegistro agregado correctamente.");
+		System.out.println("\nRegistro agregado correctamente.");
 		break;
 	case 3: // (35)
-		out.println("Men\u00FA de modificaci\u00F3n de campos");
-		out.println("1.- titulo");
-		out.println("2.- autor");
-		out.println("3.- editorial");
-		out.println("4.- edicion");
-		out.println("5.- anno de publicacion");
+		System.out.println("Men\u00FA de modificaci\u00F3n de campos");
+		System.out.println("1.- titulo");
+		System.out.println("2.- autor");
+		System.out.println("3.- editorial");
+		System.out.println("4.- edicion");
+		System.out.println("5.- anno de publicacion");
 	do { // (36)
 		subopcion = leer_entero ("Seleccione un n\u00FAmero de campo a modificar");
 		if (subopcion<1 // (37)
@@ -124,18 +124,18 @@ public class Main {
 	break;
 	case 4: // (49)
 		vector.remove(dato);
-		out.println("Registro borrado correctamente.");
+		System.out.println("Registro borrado correctamente.");
 		break;
 	case 5: // (50)
 		Collections.sort(vector);
-		out.println("Registros ordenados correctamente.");
+		System.out.println("Registros ordenados correctamente.");
 		break;
 	case 6: // (51)
 		n = vector.size();
 		contador[0] = 0;
 		for (i=0; i<n; i++)// (52)
 			imprimir.funcion(vector.get(i), contador);
-		out.println("Total de registros: " + contador[0] + ".");// (53)
+		System.out.println("Total de registros: " + contador[0] + ".");// (53)
 		break;
 	}
 	if (opcion<7 // (54)
@@ -149,15 +149,16 @@ public class Main {
 	salida.close();// (61)
 	out.close();
 	teclado.close();
+	entradaEscaner.close();
 	} // (62)
 
 	private static String leer_cadena(String string) {
 		System.out.println(string);
 		String entradaTeclado = "";
-        Scanner entradaEscaner = new Scanner (System.in);
+        
 	    entradaTeclado = entradaEscaner.nextLine ();
 		//System.out.println ("Entrada recibida por teclado es: \"" + entradaTeclado +"\"");
-	    entradaEscaner.close();
+	    //entradaEscaner.close();
 		return entradaTeclado;
 	}
 
@@ -168,14 +169,13 @@ public class Main {
 
 	private static int leer_entero(String string) {
 		System.out.println(string);
-		int entradaTeclado;
-        Scanner entradaEscaner = new Scanner (System.in);
-	    entradaTeclado = entradaEscaner.nextInt();
-		//System.out.println ("Entrada recibida por teclado es: \"" + entradaTeclado +"\"");
-	    entradaEscaner.close();
+//		Scanner entradaEscaner = new Scanner (System.in);
+		int entradaTeclado = 0;
+		
+		entradaTeclado = Integer.parseInt(entradaEscaner.nextLine());
+		System.out.println ("Entrada recibida por teclado es: \"" + entradaTeclado +"\"");
+	    //entradaEscaner.nextLine();
+	    //entradaEscaner.close();
 	    return entradaTeclado;
 	}
 }
-
-
-
